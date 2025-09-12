@@ -220,21 +220,46 @@ all.equal(A %*% x, y)
 
 ## Problem 1
 ##Answer - 1a
-tmpF1 <- function (x) {
-  xval <- 
-    
+testVec <- 1:10
+
+tmpFn1 <- function (x) {
+  
+}
+tmpF1(testVec)
+
+tmpFn2 <- function (x){
+  
 }
 
 ##Answer - 1b
 
-## Problem 2
-xVec <- c(1:5, 6:1)
 
-tmpFn (x) {
-  
+## Problem 2
+a <- c(1:5, 6:1)
+
+tmpFn <- function (x) {
+    mean(x[1:3])
+    x[-1]
 }
 
-tmpFn(xVec)
+tmpFn(a)
+
+##Alternative Problem 2 (from class)
+a <- c(1:5, 6:1)
+n <- length(a)
+a[-c(n-1, n)]
+a[-c(1, n)]
+a[-c(1,2)]
+
+
+
+tmpFn <- function (x) {
+  n = length(x)
+  mva = (x[-c(n-1, n)] + x[-c(1, n)]+ x[-c(1,2)])/3
+  return (mva)
+}
+
+tmpFn(a)
 
 ## Problem 3
 xVec <- seq(-3, 3, 0.01)
@@ -259,15 +284,42 @@ matA <- oddToEven(matA)
 matA
 
 ## Problem 5
+CMat <- function (n, k) {
+  matE <- matrix(0, nrow = n, ncol = n)
+  
+  row(matE) - col(matE)
+  abs(row(matE) - col(matE)) == 1
+  
+  matE[abs(row(matE) - col(matE)) == 1] <- 1
+  diag (matE) <- k
+  
+  return(matE)
+}
+
+CMat(5, 2)
 
 ## Problem 6
+
 
 ## Problem 7
 ##Answer - 7a
 ##Answer - 7b
 
 ## Problem 8
-##Answer - 8a
+##Answer - 8a (code from class)
+testloop <- function(n){
+  if (n < 4) stop("n must be an integer > 3")
+  browser()
+  x = rep(NA, n-1)
+  x[1] = 1
+  x[2] = 2
+  
+  for (j in 3:(n-1)) {x[j] = x[j-1] + 2/x[j-1]}
+  return(x)
+}
+
+testloop(5)
+
 ##Answer - 8b
 
 ## Problem 9
@@ -281,7 +333,21 @@ matA
 
 ## Exercises 4: Harder Functions 
 
-## Problem 1
+## Problem 1 (from class)
+set.seed(50)
+x <- as.integer(runif(5, 1, 5))
+y <- as.integer(runif(6, 2, 4))
+
+z <- outer(y, x, "<")
+z
+
+colSums(z)
+
+f_4_1a <- function(x, y){
+  
+  
+}
+
 ##Answer - 1a
 ##Answer - 1b
 ##Answer - 1c
