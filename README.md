@@ -6,35 +6,35 @@
 ## Exercises 1: Vectors
 
 ## Problem #1
-##Answer - 1a
+#Answer - 1a
 p.1a <- 1:20
 p.1a
 
-##Answer - 1b
+#Answer - 1b
 p.1b <- 20:1
 p.1b
 
-##Answer - 1c
+#Answer - 1c
 p.1c <- c(1:20, 19:1)
 p.1c
 
-##Answer - 1d
+#Answer - 1d
 tmp <- c(4, 6, 3)
 tmp
 
-##Answer - 1e
+#Answer - 1e
 p.1e <- rep(tmp, 10)
 p.1e
 sum(p.1e == 4)
 
-##Answer - 1f
+#Answer - 1f
 p.1f <- rep(tmp,length=31)
 p.1f
 sum(p.1f == 4)
 sum(p.1f == 6)
 sum(p.1f == 3)
 
-##Answer - 1g
+#Answer - 1g
 p.1g <- rep(tmp, c(10, 20, 30))
 p.1g
 sum(p.1g == 4)
@@ -43,6 +43,7 @@ sum(p.1g == 3)
 
 
 ## Problem #2
+##Answer - 2
 inputs <- seq(3, 6, 0.1)
 inputs
 p.2 <- c(exp(inputs)*cos(inputs))
