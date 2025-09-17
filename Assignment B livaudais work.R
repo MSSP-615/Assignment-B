@@ -110,14 +110,13 @@ str(fns)
 set.seed(50)
 xVec <- sample(0:999, 250, replace=T)
 yVec <- sample(0:999, 250, replace=T)
-
-##Answer - 6a
 xVec[1:30]
 yVec[1:30]
+
 yVec_adj <- yVec[-1]
-yVec_adj[1:30]
+
+##Answer - 6a
 diff <- yVec_adj - xVec
-diff[1:30]
 diff
 
 ##Answer - 6b
@@ -220,46 +219,34 @@ all.equal(A %*% x, y)
 
 ## Problem 1
 ##Answer - 1a
-testVec <- 1:10
-
-tmpFn1 <- function (x) {
-  
-}
-tmpF1(testVec)
-
-tmpFn2 <- function (x){
-  
-}
+# testVec <- 1:10
+# 
+# tmpFn1 <- function (x) {
+#   
+# }
+# tmpF1(testVec)
+# 
+# tmpFn2 <- function (x){
+#   
+# }
 
 ##Answer - 1b
 
 
-## Problem 2
-a <- c(1:5, 6:1)
-
-tmpFn <- function (x) {
-    mean(x[1:3])
-    x[-1]
-}
-
-tmpFn(a)
-
-##Alternative Problem 2 (from class)
+##Problem 2 
+## Cite -- code from class (because my first attempt wasn't quite working)
 a <- c(1:5, 6:1)
 n <- length(a)
-a[-c(n-1, n)]
-a[-c(1, n)]
-a[-c(1,2)]
-
-
 
 tmpFn <- function (x) {
   n = length(x)
-  mva = (x[-c(n-1, n)] + x[-c(1, n)]+ x[-c(1,2)])/3
+  mva = (x[-c(n-1, n)] + x[-c(1, n)] + x[-c(1,2)])/3
   return (mva)
 }
 
 tmpFn(a)
+
+
 
 ## Problem 3
 xVec <- seq(-3, 3, 0.01)
@@ -272,6 +259,7 @@ tmpFn(xVec)
 
 plot(xVec, tmpFn(xVec), type = "l")
 
+
 ## Problem 4
 matA <- matrix(c(1, 5, -2, 1, 2, -1, 3, 6, -3), nrow = 3)
 matA
@@ -282,6 +270,7 @@ oddToEven <- function (x) {
 
 matA <- oddToEven(matA)
 matA
+
 
 ## Problem 5
 CMat <- function (n, k) {
@@ -306,7 +295,8 @@ CMat(5, 2)
 ##Answer - 7b
 
 ## Problem 8
-##Answer - 8a (code from class)
+##Answer - 8a
+## Cite -- code from class
 testloop <- function(n){
   if (n < 4) stop("n must be an integer > 3")
   browser()
@@ -322,6 +312,8 @@ testloop(5)
 
 ##Answer - 8b
 
+
+
 ## Problem 9
 ##Answer - 9a
 ##Answer - 9b
@@ -331,10 +323,15 @@ testloop(5)
 ##Answer - 10b
 
 
+
+
 ## Exercises 4: Harder Functions 
 
-## Problem 1 (from class)
-set.seed(50)
+## Problem 1 
+## (Cite -- code from class for all parts)
+
+##Answer - 1a
+set.seed(234)
 x <- as.integer(runif(5, 1, 5))
 y <- as.integer(runif(6, 2, 4))
 
@@ -343,20 +340,78 @@ z
 
 colSums(z)
 
-f_4_1a <- function(x, y){
-  
-  
+f_41a <- function(x, y){
+  z = colSums(outer(y, x, "<"))
+  return(z)
 }
 
-##Answer - 1a
+zVec <- f_41a(x, y)
+zVec
+
 ##Answer - 1b
+
+f_1b <- function(x,y){
+  rowSums(sapply(y, FUN = function(y){y < x}))
+}
+
+f_1b(x,y)
+
 ##Answer - 1c
+f_1c <- function(x,y){
+  
+  rowSums(vapply(y, FUN=function(y){y<x}, 
+                 FUN.VALUE = (along=x)))
+}
+
+f_1c(x,y)
+
 ##Answer - 1d
+zer <- rep(0, 0)
+mat1 <- matrix(c(1,2,3,2,4,5,4,3,4,3,4,2,1,2,3,7),nr = 4)
+
+f_41a(zer, zer)
+f_41a(zer, a)
+f_41a(mat1, zer)
+f_41a(mat1, mat1)
+
+f_1b(zer, zer)
+f_1b(zer, a)
+f_1b(mat1, zer)
+f_1b(mat1, mat1)
+
+f_1c(zer, zer)
+f_1c(zer, a)
+f_1c(mat1, zer)
+f_1c(mat1, mat1)
+
 ##Answer - 1e
+set.seed(53)
+x1 <- rnorm(10010)
+y1 <- rnorm(10020)
+
+system.time(f_41a(x1,y1))
+system.time(f_1b(x1,y1))
+system.time(f_1c(x1,y1))
+
 
 ## Problem 2
 ##Answer - 2a
+tMat <- matrix(c(1,4,NA,3,NA,6, 5, 3, 9), nrow = 3, ncol = 3)
+tMat
+
+noNAcols <- function(mat) {
+  mat[, colSums(is.na(mat)) == 0, drop  = FALSE]
+}
+
+noNAcols(tMat)
+
 ##Answer - 2b
+
+noNAmat <- function(mat) {
+  mat[rowSums(is.na(mat)) == 0, colSums(is.na(mat)) == 0, drop  = FALSE]
+}
+
+noNAmat(tMat)
 
 ## Problem 3
 ##Answer - 3a
@@ -370,23 +425,178 @@ f_4_1a <- function(x, y){
 ##Answer - 4e
 
 ## Problem 5
+## code from class and then edited.
 ##Answer - 5a
+queue <- function(n, aRate, sRate) {
+  A <- rexp(n, rate = aRate)
+  S <- rexp(n, rate = sRate)
+  W <- numeric(n + 1)          
+  W[1] <- 0
+  
+  for (j in 1:n) {
+    W[j + 1] <- max(0, W[j] + S[j] - A[j])
+  }
+  
+  W[n + 1]   
+}
+
+set.seed(1)
+queue(50, 2, 2)
+
 ##Answer - 5b
+queueLoop <- function(n, aRate, sRate, reps = 1000) {
+  out <- numeric(reps)
+  for (i in 1:reps) {
+    out[i] <- queue(n, aRate, sRate)
+  }
+  out
+}
+
+system.time(queueLoop(50, 2, 2, 10000))
+
+queueRep <- function(n, aRate, sRate, reps = 1000) {
+  replicate(reps, queue(n, aRate, sRate))
+}
+
+system.time(queueRep(50, 2, 2, 10000))
+
 ##Answer - 5c
+queueVec <- function(n, aRate, sRate) {
+  D <- rexp(n, rate = sRate) - rexp(n, rate = aRate)
+  W <- Reduce(function(prev, d) max(0, prev + d), D, init = 0, accumulate = TRUE)
+  tail(W, 1)
+}
+
+system.time(replicate(10000, queueVec(50, 2, 2)))
+
+
 
 ## Problem 6
+## Code from class and discussion 
 ##Answer - 6a
+set.seed(46)
+rwalk <- function(n) {
+  steps <- sample(c(-1, 1), n, replace = TRUE, prob = c(0.5, 0.5))
+  positions <- c(0, cumsum(steps))
+  return(positions)
+}
+
+rwalk(10)
+
+
 ##Answer - 6b
+## edited code from class because it wasn't quite correct
+set.seed(58)
+n <- 10
+
+rwalkPos <- function(n) {
+  path <- rwalk(n)
+  time_above <- sum(path[2:n+1] >= 0)
+  return(list(time_above = time_above, path = path))
+}
+
+rwalkPos(n)
+
+
 ##Answer - 6c
+
+rwalkPos1 <- function(nReps, n) {
+  out <- numeric(nReps)
+  for (i in 1:nReps) {out[i] <- rwalkPos(n)}
+  return(out)
+}
+
+rwalkPos2 <- function(nReps, n) {
+  replicate(nReps, rwalkPos(n))
+}
+
+system.time(res1 <- rwalkPos1(10000, 100))
+suppressWarnings(system.time(res1 <- rwalkPos1(10000, 100)))
+system.time(res2 <- rwalkPos2(10000, 100))
+
+
 ##Answer - 6d
+## function code from google AI bot
+## Answer -- Yes, if you generate all the paths first and put into a matrix
+
+rwalkPos_vectorized <- function(nReps, n) {
+  all_steps <- sample(c(-1, 1), nReps * n, replace = TRUE)
+  steps_matrix <- matrix(all_steps, nrow = n, ncol = nReps)
+  walks_matrix <- apply(steps_matrix, 2, cumsum)
+  time_above_axis <- colSums(walks_matrix > 0)
+  return(time_above_axis)
+}
+
+rwalkPos_vectorized(10000, 100)
+system.time(res3 <- rwalkPos_vectorized(10000, 100))
+
 
 
 
 ## Exercises 5: Data frame, list, array and time series
 
 ## Problem 1
+library(TSstudio)
 ##Answer - 1a
+## code from google AI bot then edited 
+set.seed(50)
+tmp <- ts(rnorm(4000), start = c(1960, 3), frequency = 12)
+
+tsEwma <- function(tsDat, m0, delta) {
+  z <- as.vector(tsDat)
+  n <- length(z)
+  
+  m <- numeric(n)
+  mt_1 <- m0
+  
+  for (t in 1:n) {
+    et <- z[t] - mt_1
+    mt <- mt_1 + (1 - delta) * et
+    m[t] <- mt
+    mt_1 <- mt
+  }
+  tsp_attributes <- tsp(tsDat)
+  return(ts(m, start = tsp_attributes[1], frequency = tsp_attributes[3]))
+}
+
+tsEwma(tmp, 0, 0.7)
+
 ##Answer - 1b
+tsEwmaOpt <- function(tsDat, m0 = 0, delta = 0.7) {
+  # Extract the vector of data from the time series object first
+  datVec <- as.vector(tsDat)
+  n <- length(datVec)
+  
+  # Initialize the vector for EWMA calculations
+  m <- numeric(n)
+  
+  # The recursive calculation remains the same
+  mt_1 <- m0
+  for (t in 1:n) {
+    et <- datVec[t] - mt_1
+    mt <- mt_1 + (1 - delta) * et
+    m[t] <- mt
+    mt_1 <- mt
+  }
+  
+  # Re-create the time series with the same attributes
+  tsp_attributes <- tsp(tsDat)
+  return(ts(m, start = tsp_attributes[1], frequency = tsp_attributes[3]))
+}
+
+set.seed(42)
+datVec <- rnorm(50000)
+tsDat <- ts(datVec, start = c(1960, 3), frequency = 12)
+
+# Compare the execution time of the two functions
+cat("Timing the original function:\n")
+system.time(tsEwma(tsDat))
+
+cat("\nTiming the optimized function:\n")
+system.time(tsEwmaOpt(tsDat))
+
+
+
 
 ## Problem 2
 ##Answer - 2a
@@ -396,14 +606,73 @@ f_4_1a <- function(x, y){
 ##Answer - 2e
 ##Answer - 2f
 
+
+
 ## Problem 3
 ##Answer - 3a
 ##Answer - 3b
 ##Answer - 3c
 
+
+
 ## Problem 4
+set.seed(123)
+testArray <- array(sample( 1:60, 60, replace=F), dim=c(5,4,3))
+
 ##Answer - 4a
+## code from class and discussion and edited. 
+
+testFn <- function(arr) {
+  d1 <- dim(arr)[1]
+  d2 <- dim(arr)[2]
+  d3 <- dim(arr)[3]
+  
+  w <- array(0, dim=c(d1,d2,d3))
+  for(k in 1:d3){
+    for(j in 1:d2){
+      w[,j,k] <- arr[,j,k] - min(arr[,j,k])
+    }
+  }
+  
+  z <- matrix(0, nrow=d2, ncol=d3)
+  for(k in 1:d3){
+    for(j in 1:d2){
+      z[j,k] <- sum(arr[,j,k]) - max(arr[,j,k])
+    }
+  }
+  
+  return(list(w=w, z=z))
+}
+
+res1 <- testFn(testArray)
+
+
 ##Answer - 4b
+## code from discussion but edited
+
+testFn2 <- function(arr) {
+  d1 <- dim(arr)[1]
+  d2 <- dim(arr)[2]
+  d3 <- dim(arr)[3]
+  
+  z <- matrix(0, nrow=d2, ncol=d3)
+  for(k in 1:d3){
+    for(j in 1:d2){
+      z[j,k] <- sum(arr[,j,k]^k)
+    }
+  }
+  return(z)
+}
+
+res2 <- testFn2(testArray)
+
+testArray
+res1$w
+res1$z
+res2
+
+
+
 
 ## Problem 5
 ##Answer - 5a
