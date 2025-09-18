@@ -472,7 +472,7 @@ system.time(replicate(10000, queueVec(50, 2, 2)))
 
 
 ## Problem 6
-## Code from class and discussion 
+## all parts start with code from class and discussion 
 ##Answer - 6a
 set.seed(46)
 rwalk <- function(n) {
@@ -542,7 +542,7 @@ library(TSstudio)
 set.seed(50)
 tmp <- ts(rnorm(4000), start = c(1960, 3), frequency = 12)
 
-tsEwma <- function(tsDat, m0, delta) {
+tsEwmaVec <- function(tsDat, m0, delta) {
   z <- as.vector(tsDat)
   n <- length(z)
   
@@ -559,60 +559,131 @@ tsEwma <- function(tsDat, m0, delta) {
   return(ts(m, start = tsp_attributes[1], frequency = tsp_attributes[3]))
 }
 
-tsEwma(tmp, 0, 0.7)
-
-##Answer - 1b
-tsEwmaOpt <- function(tsDat, m0 = 0, delta = 0.7) {
-  # Extract the vector of data from the time series object first
-  datVec <- as.vector(tsDat)
-  n <- length(datVec)
+tsEwmaTS <- function(tsDat, m0, delta) {
+  n <- length(tsDat)
   
-  # Initialize the vector for EWMA calculations
   m <- numeric(n)
-  
-  # The recursive calculation remains the same
   mt_1 <- m0
+  
   for (t in 1:n) {
-    et <- datVec[t] - mt_1
+    et <- tsDat[t] - mt_1
     mt <- mt_1 + (1 - delta) * et
     m[t] <- mt
     mt_1 <- mt
   }
   
-  # Re-create the time series with the same attributes
   tsp_attributes <- tsp(tsDat)
   return(ts(m, start = tsp_attributes[1], frequency = tsp_attributes[3]))
 }
 
-set.seed(42)
-datVec <- rnorm(50000)
-tsDat <- ts(datVec, start = c(1960, 3), frequency = 12)
+tsEwmaTS(tmp, 0, 0.7)
+tsEwmaVec(tmp, 0, 0.7)
 
-# Compare the execution time of the two functions
-cat("Timing the original function:\n")
-system.time(tsEwma(tsDat))
 
-cat("\nTiming the optimized function:\n")
-system.time(tsEwmaOpt(tsDat))
+
+##Answer - 1b
+
+system.time(tsEwmaVec(tmp, 0, 0.7))
+system.time(tsEwmaTS(tmp, 0, 0.7))
 
 
 
 
 ## Problem 2
 ##Answer - 2a
-##Answer - 2b
-##Answer - 2c
-##Answer - 2d
-##Answer - 2e
-##Answer - 2f
+## code assistance from Google AI bot
+myListFn <- function(n) {
+  x <- rnorm(n)
+  x_bar <- mean(x)
+  
+  if (x_bar >= 0) {
+    y <- rexp(n, rate = 1/x_bar)
+  } else {
+    z <- rexp(n, rate = 1/(-x_bar))
+    y <- -z
+  }
+  
+  k <- sum(abs(y) > abs(x))
 
+  return(list(xVec = x, yVec = y, count = k))
+}
+
+set.seed(42) 
+myListFn(n = 10)
+
+
+##Answer - 2b
+
+lapply(rep(10,4), myListFn)
+sapply(rep(10,4), myListFn)
+
+
+##Answer - 2c
+
+##Simulation study - used google AI bot to help understand lapply
+num_times <- 1000
+set.seed(42) 
+myList <- lapply(1:num_times, function(i) myListFn(n = 10))
+myList
+
+## extracting yVec -- used google AI bot to help with extraction code
+yVecs <- lapply(myList, function(x) x[["yVec"]])
+yVecs
+
+str(yVecs)
+
+##Answer - 2d
+yVecs_matrix <- sapply(myList, function(x) x[["yVec"]])
+yVecs_matrix
+
+dim(yVecs_matrix)
+
+##Answer - 2e
+## google AI bot helped with code
+myList_noCount <- lapply(myList, function(x) x[!names(x) %in% "count"])
+myList_noCount
+
+##Answer - 2f
+## google AI bot helped with code after failed attempts
+myList_C2 <- myList[sapply(myList, function(x) x[["count"]] > 2)]
+myList_C2
 
 
 ## Problem 3
 ##Answer - 3a
-##Answer - 3b
-##Answer - 3c
+yVecs <- lapply(myList, function(x) x[["yVec"]])
+yVecs
+xVecs <- lapply(myList, function(x) x[["xVec"]])
+xVecs
 
+multipliers <- c(1:10)
+
+## used google AI bot to help with top & bottom functions 
+top <- sapply(xVecs, function(x) sum(x*multipliers))
+bottom <- sapply(yVecs, function(x) sum(x*multipliers))
+
+top
+bottom
+
+result_vec <- top / bottom
+result_vec
+
+##Answer - 3b
+yVecs_matrix <- sapply(myList, function(x) x[["yVec"]])
+xVecs_matrix <- sapply(myList, function(x) x[["xVec"]])
+
+xyVecs_diff_matrix <- xVecs_matrix - yVecs_matrix
+xyVecs_diff_matrix
+dim(xyVecs_diff_matrix)
+
+final_diff_mat <- t(xyVecs_diff_matrix)
+dim(final_diff_mat)
+final_diff_mat[1:5,]
+
+##Answer - 3c
+## numerator
+mult <- c(1:1000)
+num_sum
 
 
 ## Problem 4
@@ -620,7 +691,7 @@ set.seed(123)
 testArray <- array(sample( 1:60, 60, replace=F), dim=c(5,4,3))
 
 ##Answer - 4a
-## code from class and discussion and edited. 
+## code from class and discussion and edited because seeing errors. 
 
 testFn <- function(arr) {
   d1 <- dim(arr)[1]
