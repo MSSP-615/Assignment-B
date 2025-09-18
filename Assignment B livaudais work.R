@@ -681,10 +681,18 @@ dim(final_diff_mat)
 final_diff_mat[1:5,]
 
 ##Answer - 3c
-## numerator
-mult <- c(1:1000)
-num_sum
+## code help from google AI bot 
 
+x_values <- sapply(myList, "[[", "xVec")[2,]
+y_values <- sapply(myList, "[[", "yVec")[2,]
+n_values <- sapply(myList, "[[", "count")
+mults <- c(1:1000)
+
+numer1 <- sum(mults * x_values)
+denom1 <- sum(n_values * y_values)
+
+result <- numer1/denom1
+result
 
 ## Problem 4
 set.seed(123)
